@@ -32,3 +32,4 @@
 cptest
 html/*
 latex/*
+*.swp
