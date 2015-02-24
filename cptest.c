@@ -10,6 +10,7 @@
 // function prototype
 int copyfile1(char* infilename, char* outfilename);
 int copyfile2(char* infilename, char* outfilename);
+int copyfile3(char* infilename, char* outfilename, int bufsize);
 
 /** cptest.cpp
  * A file copying program.
@@ -54,7 +55,7 @@ int main(int argc, char* argv[])
     outfilename = argv[2];
 
     // Perform the copying
-    int returnstatus = copyfile2(infilename, outfilename);
+    int returnstatus = copyfile3(infilename, outfilename, 2048);
 
     return returnstatus;
 }
@@ -139,3 +140,42 @@ int copyfile2(char* infilename, char* outfilename)
     return 1;
 }
 
+/**
+ * @brief Copies a file from one place to another using the binary file
+ * read and write commands.
+ *
+ * @param infilename The name of the input file to copy.
+ * @param outfilename The name of the output file to copy to.
+ * @param bufsize The size of the file buffer in memory to use.
+ *
+ * @return 0 if success, 1 if error.
+ */
+int copyfile3(char* infilename, char* outfilename, int bufsize)
+{
+    int infile = open(infilename, O_RDONLY);
+    if (infile < 0)
+    {
+        printf("Error in cp: %d (%s)\n", errno, strerror(errno));
+        return 1;
+    }
+    int outfile = open(outfilename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR |
+                       S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+    if (outfile < 0)
+    {
+        printf("Error in cp: %d (%s)\n", errno, strerror(errno));
+        return 1;
+    }
+
+    //Process file data here.
+    char buffer[bufsize];
+    int  read_bytes;
+    while ((read_bytes = read(infile, buffer, bufsize)) > 0)
+    {
+        write(outfile, buffer, read_bytes);
+    }
+
+    close(infile);
+    close(outfile);
+
+    return 1;
+}
