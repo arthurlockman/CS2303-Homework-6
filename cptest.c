@@ -23,7 +23,7 @@ int copyfile3(char* infilename, char* outfilename, int bufsize);
 */
 void usage(char* program_name)
 {
-    printf("Usage: %s infile outfile\n", program_name);
+    printf("Usage: %s infile outfile [copymode = 1, 2, 3] [buffer size]\nCopy mode and buffer size are optional.\n", program_name);
 }
 
 /**
@@ -44,8 +44,9 @@ int main(int argc, char* argv[])
 {
     char* infilename; // Names of files.
     char* outfilename;
-
-    if (argc != 3)
+    int mode;
+    int buffSize;
+    if (argc < 3)
     {
         usage(argv[0]); // Must have exactly 2 arguments.
         return 1;
@@ -53,10 +54,30 @@ int main(int argc, char* argv[])
 
     infilename = argv[1];
     outfilename = argv[2];
-
+    mode = atoi(argv[3]);
+    if (mode == 3 && argc != 4)
+    {
+        usage(argv[0]);
+        return 1;
+    }
+    else if (mode == 3 && argc == 4)
+    {
+        buffSize = atoi(argv[4]);
+    }
     // Perform the copying
-    int returnstatus = copyfile3(infilename, outfilename, 2048);
-
+    int returnstatus;
+    switch (mode)
+    {
+    case 1: 
+        returnstatus = copyfile1(infilename, outfilename);
+        break;
+    case 2:
+        returnstatus = copyfile2(infilename, outfilename);
+        break;
+    case 3:
+        returnstatus = copyfile3(infilename, outfilename, buffSize);
+        break;
+    }
     return returnstatus;
 }
 
