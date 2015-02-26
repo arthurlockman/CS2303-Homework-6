@@ -46,6 +46,29 @@ void printtimeofday(struct timeval * tm_ptr)
     printf("%ld seconds, %d microseconds\n", tm_ptr->tv_sec, tm_ptr->tv_usec);
 }
 
+/** 
+ * @brief Get the difference between two timeval structs.
+ * 
+ * @param end The ending time, must be later than the start.
+ * @param start The earlier time, must be earlier than the end.
+ * 
+ * @return A pointer to a newly allocated timeval struct containing
+ * the time difference. 
+ */
+struct timeval * gettimediff(struct timeval * end, struct timeval * start)
+{
+    struct timeval * ret = (struct timeval *)malloc(sizeof(struct timeval));
+    ret->tv_sec = end->tv_sec - start->tv_sec;
+    ret->tv_usec = end->tv_usec - start->tv_usec;
+    //Handle case of borrowing.
+    if (ret->tv_usec < 0)
+    {
+        ret->tv_sec -= 1;
+        ret->tv_usec += 1000000;
+    }
+    return ret;
+}
+
 /** Main program: copies a file.
     @param argc Number of command-line arguments (including program name).
     @param argv Array of pointers to character arays holding arguments.
@@ -59,6 +82,7 @@ int main(int argc, char* argv[])
     int buffSize;
     struct timeval * tm_ptr_start = (struct timeval*)malloc(sizeof(struct timeval));
     struct timeval * tm_ptr_end = (struct timeval*)malloc(sizeof(struct timeval));
+    struct timeval * tm_dt;
     if (argc < 3)
     {
         usage(argv[0]); // Must have exactly 2 arguments.
@@ -94,10 +118,11 @@ int main(int argc, char* argv[])
     gettimeofday(tm_ptr_end, NULL);
     printtimeofday(tm_ptr_start);
     printtimeofday(tm_ptr_end);
-    printf("Time difference: %ld seconds, %d microseconds\n", tm_ptr_end->tv_sec - 
-            tm_ptr_start->tv_sec, tm_ptr_end->tv_usec - tm_ptr_start->tv_usec); 
+    tm_dt = gettimediff(tm_ptr_end, tm_ptr_start);
+    printf("Time difference: %ld seconds, %d microseconds\n", tm_dt->tv_sec, tm_dt->tv_usec); 
     free(tm_ptr_start);
     free(tm_ptr_end);
+    free(tm_dt);
     return returnstatus;
 }
 
