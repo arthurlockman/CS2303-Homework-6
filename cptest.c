@@ -64,6 +64,10 @@ int main(int argc, char* argv[])
     {
         buffSize = atoi(argv[4]);
     }
+    else
+    {
+        buffSize = 2048;
+    }
     // Perform the copying
     int returnstatus;
     switch (mode)
