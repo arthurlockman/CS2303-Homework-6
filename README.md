@@ -1,11 +1,6 @@
 # CS2303-Homework-6
-Homework 6 for WPI CS 2303.
+Homework 6 for WPI CS 2303 by Arthur Lockman.
 
-##Lab: Timing
-CopyFile1 Timing for /usr/bin/vim:
+##Part 3: Timing
 
-CopyFile2 Timing for /usr/bin/vim:
-
-CopyFile3 Timing for /usr/bin/vim:
-
-
+It seems as though the binary read is the most efficient way to copy files. The buffer size is most efficient the larger it is; I found that the difference between a buffer size of 4096 bytes and 8192 bytes is not noticable.

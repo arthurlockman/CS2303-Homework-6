@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/time.h>
 
 // function prototype
 int copyfile1(char* infilename, char* outfilename);
@@ -35,6 +36,16 @@ void open_file_error(char* filename)
     printf("Error opening file %s\n", filename);
 }
 
+/** 
+ * @brief Print the value of a timeval struct.
+ * 
+ * @param tm_ptr Pointer to timeval struct to print.
+ */
+void printtimeofday(struct timeval * tm_ptr)
+{
+    printf("%ld seconds, %d microseconds\n", tm_ptr->tv_sec, tm_ptr->tv_usec);
+}
+
 /** Main program: copies a file.
     @param argc Number of command-line arguments (including program name).
     @param argv Array of pointers to character arays holding arguments.
@@ -46,6 +57,8 @@ int main(int argc, char* argv[])
     char* outfilename;
     int mode;
     int buffSize;
+    struct timeval * tm_ptr_start = (struct timeval*)malloc(sizeof(struct timeval));
+    struct timeval * tm_ptr_end = (struct timeval*)malloc(sizeof(struct timeval));
     if (argc < 3)
     {
         usage(argv[0]); // Must have exactly 2 arguments.
@@ -68,6 +81,7 @@ int main(int argc, char* argv[])
     {
         buffSize = 2048;
     }
+    gettimeofday(tm_ptr_start, NULL);
     // Perform the copying
     int returnstatus;
     switch (mode)
@@ -82,6 +96,11 @@ int main(int argc, char* argv[])
         returnstatus = copyfile3(infilename, outfilename, buffSize);
         break;
     }
+    gettimeofday(tm_ptr_end, NULL);
+    printtimeofday(tm_ptr_start);
+    printtimeofday(tm_ptr_end);
+    free(tm_ptr_start);
+    free(tm_ptr_end);
     return returnstatus;
 }
 
