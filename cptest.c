@@ -68,18 +68,13 @@ int main(int argc, char* argv[])
     infilename = argv[1];
     outfilename = argv[2];
     mode = atoi(argv[3]);
-    if (mode == 3 && argc != 4)
-    {
-        usage(argv[0]);
-        return 1;
-    }
-    else if (mode == 3 && argc == 4)
-    {
-        buffSize = atoi(argv[4]);
-    }
-    else
+    if (mode == 3 && argc == 4)
     {
         buffSize = 2048;
+    }
+    else if (mode == 3 && argc == 5)
+    {
+        buffSize = atoi(argv[4]);
     }
     gettimeofday(tm_ptr_start, NULL);
     // Perform the copying
@@ -99,6 +94,8 @@ int main(int argc, char* argv[])
     gettimeofday(tm_ptr_end, NULL);
     printtimeofday(tm_ptr_start);
     printtimeofday(tm_ptr_end);
+    printf("Time difference: %ld seconds, %d microseconds\n", tm_ptr_end->tv_sec - 
+            tm_ptr_start->tv_sec, tm_ptr_end->tv_usec - tm_ptr_start->tv_usec); 
     free(tm_ptr_start);
     free(tm_ptr_end);
     return returnstatus;
