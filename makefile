@@ -14,6 +14,7 @@ cptest2.o: cptest2.c
 
 clean:
 	rm -f *.o cptest
+	rm -f cptest2
 
 docs:
 	doxygen
