@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
     struct stat statbuf;
     char* dir;
     char* filename;
-    for (i = 1; i < argc; i++)
+    for (i = 1; i < argc; )
     {
         if (argv[i][0] == '-')
         {
@@ -107,52 +107,63 @@ int main(int argc, char* argv[])
                 buffSize = atoi(argv[i + 1]);
                 break;
             }
+            argc = argc - 2;
+            for (j = i; j < argc; j++)
+            {
+                argv[j] = argv[j + 2];
+            }
+        }
+        else
+        {
             i++;
         }
-        else if (j <= 1)
-        {
-            switch (j)
-            {
-            case 0:
-                infilename = argv[i];
-                break;
-            case 1:
-                stat(argv[i], &statbuf);
-                if (S_ISDIR(statbuf.st_mode))
-                {
-                    dir = argv[i];
-                    filename = basename(infilename);
-                    outfilename = (char*)malloc(sizeof(char) * (strlen(dir) + strlen(filename) + 2));
-                    strcat(outfilename, dir);
-                    strcat(outfilename, "/");
-                    strcat(outfilename, filename);
-                    strcat(outfilename, "\0");
-                }
-                else
-                {
-                    outfilename = argv[i];
-                }
-                break;
-            }
-            j++;
-        }
-
     }
     gettimeofday(tm_ptr_start, NULL);
-    // Perform the copying
     int returnstatus;
-    switch (mode)
+    for (i = 1; i < argc - 1; i++)
     {
-    case 1:
-        returnstatus = copyfile1(infilename, outfilename);
-        break;
-    case 2:
-        returnstatus = copyfile2(infilename, outfilename);
-        break;
-    case 3:
-        returnstatus = copyfile3(infilename, outfilename, buffSize);
-        break;
+        infilename = argv[i];
+        stat(argv[argc - 1], &statbuf);
+        if (S_ISDIR(statbuf.st_mode))
+        {
+            dir = argv[argc - 1];
+            filename = basename(infilename);
+            outfilename = (char*)malloc(sizeof(char) * (strlen(dir) + strlen(filename) + 2));
+            strcat(outfilename, dir);
+            strcat(outfilename, "/");
+            strcat(outfilename, filename);
+            strcat(outfilename, "\0");
+            switch (mode)
+            {
+            case 1:
+                returnstatus = copyfile1(infilename, outfilename);
+                break;
+            case 2:
+                returnstatus = copyfile2(infilename, outfilename);
+                break;
+            case 3:
+                returnstatus = copyfile3(infilename, outfilename, buffSize);
+                break;
+            }
+        }
+        else
+        {
+            outfilename = argv[argc - 1];
+            switch (mode)
+            {
+            case 1:
+                returnstatus = copyfile1(infilename, outfilename);
+                break;
+            case 2:
+                returnstatus = copyfile2(infilename, outfilename);
+                break;
+            case 3:
+                returnstatus = copyfile3(infilename, outfilename, buffSize);
+                break;
+            }
+        }
     }
+
     gettimeofday(tm_ptr_end, NULL);
     printtimeofday(tm_ptr_start);
     printtimeofday(tm_ptr_end);
