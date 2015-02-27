@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/time.h>
+#include <libgen.h>
 
 // function prototype
 int copyfile1(char* infilename, char* outfilename);
@@ -36,9 +37,9 @@ void open_file_error(char* filename)
     printf("Error opening file %s\n", filename);
 }
 
-/** 
+/**
  * @brief Print the value of a timeval struct.
- * 
+ *
  * @param tm_ptr Pointer to timeval struct to print.
  */
 void printtimeofday(struct timeval * tm_ptr)
@@ -46,14 +47,14 @@ void printtimeofday(struct timeval * tm_ptr)
     printf("%ld seconds, %d microseconds\n", tm_ptr->tv_sec, tm_ptr->tv_usec);
 }
 
-/** 
+/**
  * @brief Get the difference between two timeval structs.
- * 
+ *
  * @param end The ending time, must be later than the start.
  * @param start The earlier time, must be earlier than the end.
- * 
+ *
  * @return A pointer to a newly allocated timeval struct containing
- * the time difference. 
+ * the time difference.
  */
 struct timeval * gettimediff(struct timeval * end, struct timeval * start)
 {
@@ -83,14 +84,32 @@ int main(int argc, char* argv[])
     struct timeval * tm_ptr_start = (struct timeval*)malloc(sizeof(struct timeval));
     struct timeval * tm_ptr_end = (struct timeval*)malloc(sizeof(struct timeval));
     struct timeval * tm_dt;
-    if (argc < 3)
+    if (argc < 4)
     {
         usage(argv[0]); // Must have exactly 2 arguments.
         return 1;
     }
-
     infilename = argv[1];
-    outfilename = argv[2];
+
+    char* dir;
+    char* filename;
+    struct stat statbuf;
+    stat(argv[2], &statbuf);
+    if (S_ISDIR(statbuf.st_mode))
+    {
+        dir = argv[2];
+        filename = basename(infilename);
+        outfilename = (char*)malloc(sizeof(char) * (strlen(dir) + strlen(filename) + 2));
+        strcat(outfilename, dir);
+        strcat(outfilename, "/");
+        strcat(outfilename, filename);
+        strcat(outfilename, "\0");
+    }
+    else
+    {
+        outfilename = argv[2];
+    }
+    
     mode = atoi(argv[3]);
     if (mode == 3 && argc == 4)
     {
@@ -105,7 +124,7 @@ int main(int argc, char* argv[])
     int returnstatus;
     switch (mode)
     {
-    case 1: 
+    case 1:
         returnstatus = copyfile1(infilename, outfilename);
         break;
     case 2:
@@ -119,7 +138,7 @@ int main(int argc, char* argv[])
     printtimeofday(tm_ptr_start);
     printtimeofday(tm_ptr_end);
     tm_dt = gettimediff(tm_ptr_end, tm_ptr_start);
-    printf("Time difference: %ld seconds, %d microseconds\n", tm_dt->tv_sec, tm_dt->tv_usec); 
+    printf("Time difference: %ld seconds, %d microseconds\n", tm_dt->tv_sec, tm_dt->tv_usec);
     free(tm_ptr_start);
     free(tm_ptr_end);
     free(tm_dt);
