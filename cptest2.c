@@ -106,6 +106,9 @@ int main(int argc, char* argv[])
             case 'b':
                 buffSize = atoi(argv[i + 1]);
                 break;
+            default:
+                printf("Unrecognized option: %c\n", argv[i][1]);
+                break;
             }
             argc = argc - 2;
             for (j = i; j < argc; j++)
