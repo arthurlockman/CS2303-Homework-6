@@ -148,7 +148,6 @@ int main(int argc, char* argv[])
                 returnstatus = copyfile3(infilename, outfilename, buffSize);
                 break;
             }
-            free(outfilename);
         }
         else
         {
@@ -166,6 +165,7 @@ int main(int argc, char* argv[])
                 break;
             }
         }
+        free(outfilename);
     }
 
     gettimeofday(tm_ptr_end, NULL);
