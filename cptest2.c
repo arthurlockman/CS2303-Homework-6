@@ -123,7 +123,6 @@ int main(int argc, char* argv[])
     }
     gettimeofday(tm_ptr_start, NULL);
     int returnstatus;
-    argc--;
     for (i = 1; i < argc - 1; i++)
     {
         infilename = argv[i];
@@ -149,6 +148,7 @@ int main(int argc, char* argv[])
                 returnstatus = copyfile3(infilename, outfilename, buffSize);
                 break;
             }
+        free(outfilename);
         }
         else
         {
@@ -166,7 +166,6 @@ int main(int argc, char* argv[])
                 break;
             }
         }
-        free(outfilename);
     }
 
     gettimeofday(tm_ptr_end, NULL);
