@@ -132,6 +132,7 @@ int main(int argc, char* argv[])
             dir = argv[argc - 1];
             filename = basename(infilename);
             outfilename = (char*)malloc(sizeof(char) * (strlen(dir) + strlen(filename) + 2));
+            memset(outfilename, 0, (sizeof(char) * (strlen(dir) + strlen(filename) + 2)));
             strcat(outfilename, dir);
             strcat(outfilename, "/");
             strcat(outfilename, filename);
@@ -148,7 +149,7 @@ int main(int argc, char* argv[])
                 returnstatus = copyfile3(infilename, outfilename, buffSize);
                 break;
             }
-        free(outfilename);
+            free(outfilename);
         }
         else
         {
