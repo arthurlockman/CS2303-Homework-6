@@ -123,6 +123,7 @@ int main(int argc, char* argv[])
     }
     gettimeofday(tm_ptr_start, NULL);
     int returnstatus;
+    argc--;
     for (i = 1; i < argc - 1; i++)
     {
         infilename = argv[i];

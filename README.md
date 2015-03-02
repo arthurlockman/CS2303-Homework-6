@@ -37,6 +37,7 @@ The buffer size option is optional, and only valid in copy mode 3. The copy mode
 * Mode 2: copy files in binary mode using a fixed buffer size.
 * Mode 3: copy files in binary mode using a variable buffer size, specified by the buffer size parameter.
 
+The program will 
 Examples of running the program for each of the copy modes are shown below. Time outputs will differ for each file and each system.
 
 ###Copy Mode 1
@@ -61,3 +62,5 @@ Examples of running the program for each of the copy modes are shown below. Time
     Time difference: 0 seconds, 495 microseconds
 
 ##cptest2
+
+cptest2 is almost identical to cptest
