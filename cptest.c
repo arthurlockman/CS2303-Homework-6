@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 {
     char* infilename; // Names of files.
     char* outfilename;
-    int mode;
+    int mode = 1;
     int buffSize;
     struct timeval * tm_ptr_start = (struct timeval*)malloc(sizeof(struct timeval));
     struct timeval * tm_ptr_end = (struct timeval*)malloc(sizeof(struct timeval));
